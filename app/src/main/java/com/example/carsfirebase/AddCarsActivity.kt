@@ -54,6 +54,9 @@ class AddCarsActivity : AppCompatActivity() {
         database.child("cars").setValue(car)
             .addOnCompleteListener{
                 Toast.makeText(this, "Car inserted successfully", Toast.LENGTH_LONG).show()
+
+                carsNameText.text.clear()
+                carsYearText.text.clear()
             }
             .addOnFailureListener{
                 err -> Toast.makeText(this, "Error ${err.message}", Toast.LENGTH_LONG).show()
