@@ -1,4 +1,4 @@
-package com.example.carsfirebase
+package com.example.carsfirebase.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.carsfirebase.R
 
 class MainActivity : AppCompatActivity() {
     private lateinit var buttonStart: Button
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         buttonStart = findViewById(R.id.buttonStart)
 
         buttonStart.setOnClickListener{
-            val intent = Intent(this, AddCarsActivity::class.java)
+            val intent = Intent(this, ListCarsActivity::class.java)
             startActivity(intent)
         }
 

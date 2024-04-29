@@ -1,4 +1,4 @@
-package com.example.carsfirebase
+package com.example.carsfirebase.models
 
 data class CarModel(
     val carId: String? = null,
