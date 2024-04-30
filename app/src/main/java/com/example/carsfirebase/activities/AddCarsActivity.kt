@@ -67,6 +67,8 @@ class AddCarsActivity : AppCompatActivity() {
 
                 carsNameText.text.clear()
                 carsYearText.text.clear()
+
+                finish()
             }
             .addOnFailureListener{
                 err -> Toast.makeText(this, "Error ${err.message}", Toast.LENGTH_LONG).show()

@@ -47,6 +47,10 @@ class CarDetailsActivity : AppCompatActivity() {
         btnUpdate.setOnClickListener {
             openUpdateDialog(carsId, carsName)
         }
+
+        btnDelete.setOnClickListener {
+            deleteRecord(intent.getStringExtra("carId").toString())
+        }
     }
 
     private fun startProperties() {
@@ -101,5 +105,19 @@ class CarDetailsActivity : AppCompatActivity() {
         val carRef = FirebaseDatabase.getInstance().getReference("cars").child(id)
         val carInfo = CarModel(id, name, year)
         carRef.setValue(carInfo)
+    }
+
+    private fun deleteRecord(id: String) {
+        val carRef = FirebaseDatabase.getInstance().getReference("cars").child(id)
+        val task = carRef.removeValue()
+
+        task.addOnSuccessListener {
+            Toast.makeText(this, "Car data deleted", Toast.LENGTH_LONG).show()
+            val intent = Intent(this, ListCarsActivity::class.java)
+            finish()
+            startActivity(intent)
+        }.addOnFailureListener { error ->
+            Toast.makeText(this, "Deleting err ${error.message}", Toast.LENGTH_LONG).show()
+        }
     }
 }
