@@ -6,6 +6,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.carsfirebase.models.CarModel
 import com.example.carsfirebase.R
 import com.google.firebase.Firebase
@@ -27,6 +29,12 @@ class AddCarsActivity : AppCompatActivity() {
         saveButton.setOnClickListener{
             saveCars()
         }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.add)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
 
     private fun startProperties() {
@@ -34,7 +42,7 @@ class AddCarsActivity : AppCompatActivity() {
         carsYearText = findViewById(R.id.carsYear)
         saveButton = findViewById(R.id.carsSaveButton)
 
-        database = Firebase.database.reference
+        database = Firebase.database.getReference("cars")
     }
 
     private fun saveCars() {
@@ -53,7 +61,7 @@ class AddCarsActivity : AppCompatActivity() {
 
         val car = CarModel(carId, carName, carYear)
 
-        database.child("cars").setValue(car)
+        database.child(carId).setValue(car)
             .addOnCompleteListener{
                 Toast.makeText(this, "Car inserted successfully", Toast.LENGTH_LONG).show()
 

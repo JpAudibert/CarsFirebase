@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carsfirebase.R
@@ -37,6 +39,12 @@ class ListCarsActivity : AppCompatActivity() {
             val intent = Intent(this, AddCarsActivity::class.java)
             startActivity(intent)
         }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.list)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
 
     private fun startProperties() {
@@ -51,17 +59,31 @@ class ListCarsActivity : AppCompatActivity() {
     private fun getCarsData() {
         carsListRV.visibility = View.GONE
 
-        database.addValueEventListener(object : ValueEventListener{
+        database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 carsList.clear()
                 if (snapshot.exists()) {
-                    for(carSnap in snapshot.children){
-                        val carData = snapshot.getValue(CarModel::class.java)
+                    for (carSnap in snapshot.children) {
+                        val carData = carSnap.getValue(CarModel::class.java)
                         carsList.add(carData!!)
                     }
 
                     val adapter = CarsAdapter(carsList)
                     carsListRV.adapter = adapter
+
+                    adapter.setOnItemClickListener(object : CarsAdapter.IOnItemClickListener {
+                        override fun onItemClick(position: Int) {
+                            val intent =
+                                Intent(this@ListCarsActivity, CarDetailsActivity::class.java)
+
+                            intent.putExtra("carId", carsList[position].carId)
+                            intent.putExtra("carName", carsList[position].carName)
+                            intent.putExtra("carYear", carsList[position].carYear)
+
+                            startActivity(intent)
+                        }
+
+                    })
 
                     carsListRV.visibility = View.VISIBLE
                 }

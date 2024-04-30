@@ -10,13 +10,30 @@ import com.example.carsfirebase.models.CarModel
 
 class CarsAdapter(private val carsList: ArrayList<CarModel>) :
     RecyclerView.Adapter<CarsAdapter.ViewHolder>() {
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    private lateinit var listener: IOnItemClickListener
+
+    interface IOnItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    fun setOnItemClickListener(clickListener: IOnItemClickListener) {
+        listener = clickListener
+    }
+
+    class ViewHolder(itemView: View, clickListener: IOnItemClickListener) : RecyclerView.ViewHolder(itemView) {
         val carName: TextView = itemView.findViewById(R.id.carName)
+
+        init {
+            itemView.setOnClickListener{
+                clickListener.onItemClick(adapterPosition)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_car, parent, false)
-        return ViewHolder(itemView)
+        return ViewHolder(itemView, listener)
     }
 
     override fun getItemCount(): Int {
